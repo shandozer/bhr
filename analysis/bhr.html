@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>BHR Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.css" />
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/dcjs/dc.css" />
+    <style>
+        .dc-chart g.row text {
+          fill: rgb(51, 51, 51);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <h1 class="page-header">BHR Dashboard <small id="report-date"></small></h1>
+    <div class="row">
+        <div class="col-md-4" id="age-chart">
+            <strong>By Age</strong>
+            <span class="reset" style="display: none;">range: <span class="filter"></span></span>
+            <a class="reset" href="javascript:ageChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+            <div class="clearfix"></div>
+        </div>
+        <div class="col-md-4" id="gender-chart">
+            <strong>By Gender</strong>
+            <a class="reset" href="javascript:genderChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+            <div class="clearfix"></div>
+        </div>
+        <div class="col-md-4" id="eth-chart">
+            <strong>By Race/Ethnicity</strong>
+            <a class="reset" href="javascript:ethChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div id="test-chart" class="col-md-8">
+            <strong>Test Completion</strong>
+            <a class="reset" href="javascript:testChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+            <div class="clearfix"></div>
+        </div>
+        
+        <div class="col-md-4" id="fh-chart">
+            <strong>Family History of Alzheimer&apos;s</strong>
+            <a class="reset" href="javascript:fhChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+            <div class="clearfix"></div>
+        </div>
+        
+    </div>
+    <div class="row">
+        <div id="date-chart" class="col-xs-12">
+            <strong>New Registrants by Day</strong>
+            <a class="reset" href="javascript:dateChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div id="feedback-chart" class="col-xs-12">
+            <strong>Feedback Ratings by Week</strong>
+            <a class="reset" href="javascript:feedbackChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="bower_components/d3/d3.min.js"></script>
+<script src="bower_components/crossfilter/crossfilter.min.js"></script>
+<script src="bower_components/dcjs/dc.min.js"></script>
+<script src="bower_components/momentjs/min/moment.min.js"></script>
+<script>
+    var reportDate = new Date().toLocaleDateString("en-US");
+    $('#report-date').text(reportDate);
+    
+    var ageChart = dc.barChart("#age-chart");
+    var genderChart = dc.pieChart("#gender-chart");
+    var fhChart = dc.pieChart('#fh-chart');
+    var dateChart = dc.lineChart("#date-chart");
+    var ethChart = dc.rowChart('#eth-chart');
+    var testChart = dc.barChart("#test-chart");
+    var feedbackChart = dc.seriesChart('#feedback-chart');
+    
+    var formatNumber = d3.format(",d"),
+            formatPercent = d3.format("%"),
+            formatChange = d3.format("+,d"),
+            formatDate = d3.time.format("%B %d, %Y"),
+            formatTime = d3.time.format("%I:%M %p");
+            
+    d3.csv("data.csv", function(error, subjects) {
+        // Various formatters.
+        
+
+        subjects.forEach(function(d, i) {
+            d.index = i;
+            d.date = moment(d.CreatedDate);
+            d.age = +d.Age__c;
+            d.gender = d.Gender__c || "Unknown";
+            d.fh = d.Family_Members_has_Alzheimer__c || "Unknown";
+            d.eth = d.Race_Ethnicity_Selected__c.indexOf(';') > -1 ? "Mixed": d.Race_Ethnicity_Selected__c || "Unknown";
+            d.tests = +d.TestsCompleted;
+            d.rate = +d.CompletionRate;
+            d.easy = +d.HowEasy;
+            d.clear = +d.HowClear;
+            d.likely = +d.HowLikely;
+        });
+
+        var subject = crossfilter(subjects),
+                all = subject.groupAll(),
+                date = subject.dimension(function(d) { return d.date.toDate(); }),
+                dates = date.group(d3.time.day),
+                // hour = subject.dimension(function(d) { return d.date.getHours() + d.date.getMinutes() / 60; }),
+                // hours = hour.group(Math.floor),
+                gender = subject.dimension(function(d) { return d.gender; }),
+                genders = gender.group(),
+                fh = subject.dimension(function(d) { return d.fh; }),
+                fhGroup = fh.group(),
+                eth = subject.dimension(function(d){ return d.eth; }),
+                ethGroup = eth.group(),
+                age = subject.dimension(function(d) { return Math.max(-60, Math.min(149, d.age)); }),
+                ages = age.group(function(d) { return Math.floor(d / 10) * 10; });
+
+                var week = subject.dimension(function(d) { return d.date.startOf('week'); });
+                var feedback = week.group().reduce(
+                    function(p, v) {
+                        if (v.easy || v.clear || v.likely)
+                        {
+                            p.count++;
+                            p.sumEasy += v.easy;
+                            p.avgEasy = p.sumEasy / p.count;
+                            p.sumClear += v.clear;
+                            p.avgClear = p.sumClear / p.count;
+                            p.sumLikely += v.likely;
+                            p.avgLikely = v.sumLikely / p.count;
+                        }
+                        return p;
+                    },
+                    function(p, v) {
+                        if (v.easy || v.clear || v.likely)
+                        {
+                            p.count--;
+                            p.sumEasy -= v.easy;
+                            p.avgEasy = p.sumEasy / p.count;
+                            p.sumClear -= v.clear;
+                            p.avgClear = p.sumClear / p.count;
+                            p.sumLikely -= v.likely;
+                            p.avgLikely = v.sumLikely / p.count;
+                        }
+                        return p;
+                    },
+                    function(p, v) {
+                        return {
+                            count: 0,
+                            sumEasy: 0,
+                            sumClear: 0,
+                            sumLikely: 0
+                        }
+                    }
+                );
+                var tests = week.group().reduce(
+                                function(p, v) {
+                                    p.total++;
+                                    if (v.tests == 0)
+                                        p.nones++;
+                                    if (v.tests > 0 && v.tests < 5)
+                                        p.ones++;
+                                    if (v.tests >= 5 && v.tests < 10)
+                                        p.fives++;
+                                    if (v.tests >= 10 && v.rate < 1)
+                                        p.tens++;
+                                    if (v.rate == 1)
+                                        p.alls++;
+                                    
+                                    return p;
+                                },
+                                function(p, v) {
+                                    p.total--;
+                                    if (v.tests == 0)
+                                        p.nones--;
+                                    if (v.tests > 0 && v.tests < 5)
+                                        p.ones--;
+                                    if (v.tests > 5 && v.tests < 10)
+                                        p.fives--;
+                                    if (v.tests >= 10 && v.rate < 1)
+                                        p.tens--;
+                                    if (v.rate == 1)
+                                        p.alls--;
+                                    return p;
+                                },
+                                function() {
+                                    return {
+                                        total: 0,
+                                        nones:0,
+                                        ones:0,
+                                        fives:0,
+                                        tens:0,
+                                        alls:0
+                                    };
+                                }
+                            );
+                            
+        genderChart
+                .height(180) // (optional) define chart height, :default = 200
+                .radius(80) // define pie radius
+                .dimension(gender) // set dimension
+                .group(genders) // set group
+            /* (optional) by default pie chart will use group.key as it's label
+             * but you can overwrite it with a closure */
+                .legend(dc.legend().x(0).y(0).gap(5))
+                .label(function (d) {
+                    if (genderChart.hasFilter() && !genderChart.hasFilter(d.key))
+                        return "0%";
+                    return Math.floor(d.value / all.value() * 100) + "%";
+                }) /*
+         // (optional) whether chart should render labels, :default = true
+         .renderLabel(true)
+         // (optional) if inner radius is used then a donut chart will be generated instead of pie chart
+         .innerRadius(40)
+         // (optional) define chart transition duration, :default = 350
+         .transitionDuration(500)
+         // (optional) define color array for slices
+         .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+         // (optional) define color domain to match your data domain if you want to bind data or color
+         .colorDomain([-1750, 1644])
+         // (optional) define color value accessor
+         .colorAccessor(function(d, i){return d.value;})
+         */;
+
+        fhChart
+                .height(180) // (optional) define chart height, :default = 200
+                .radius(80) // define pie radius
+                .dimension(fh) // set dimension
+                .group(fhGroup) // set group
+            /* (optional) by default pie chart will use group.key as it's label
+             * but you can overwrite it with a closure */
+                .legend(dc.legend().x(0).y(0).gap(5))
+                .label(function (d) {
+                    if (fhChart.hasFilter() && !fhChart.hasFilter(d.key))
+                        return "0%";
+                    return Math.floor(d.value / all.value() * 100) + "%";
+                }) /*
+         // (optional) whether chart should render labels, :default = true
+         .renderLabel(true)
+         // (optional) if inner radius is used then a donut chart will be generated instead of pie chart
+         .innerRadius(40)
+         // (optional) define chart transition duration, :default = 350
+         .transitionDuration(500)
+         // (optional) define color array for slices
+         .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+         // (optional) define color domain to match your data domain if you want to bind data or color
+         .colorDomain([-1750, 1644])
+         // (optional) define color value accessor
+         .colorAccessor(function(d, i){return d.value;})
+         */;
+
+        ethChart
+                .height(280) // (optional) define chart height, :default = 200
+                .margins({top: 10, right: 50, bottom: 30, left: 10})
+                .dimension(eth) // set dimension
+                .group(ethGroup) // set group
+            /* (optional) by default pie chart will use group.key as it's label
+             * but you can overwrite it with a closure */
+                .legend(dc.legend().x(0).y(0).gap(5))
+                .title(function(d) {
+                    return d.value;
+                })
+                //.renderLabel(true)
+                .label(function (d) {
+                    if (ethChart.hasFilter() && !ethChart.hasFilter(d.key))
+                        return "0% " + d.key;
+                    return Math.floor(d.value / all.value() * 1000)/10 + "% " + d.key;
+                }) 
+                /*
+         // (optional) whether chart should render labels, :default = true
+         .renderLabel(true)
+         // (optional) if inner radius is used then a donut chart will be generated instead of pie chart
+         .innerRadius(40)
+         // (optional) define chart transition duration, :default = 350
+         .transitionDuration(500)
+         // (optional) define color array for slices
+         .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+         // (optional) define color domain to match your data domain if you want to bind data or color
+         .colorDomain([-1750, 1644])
+         // (optional) define color value accessor
+         .colorAccessor(function(d, i){return d.value;})
+         */;
+                
+                
+                                
+        ageChart.dimension(age)
+                .group(ages)
+                .height(180)
+                .margins({top: 10, right: 50, bottom: 30, left: 40})
+                .elasticY(true)
+            // (optional) whether bar should be center to its x value. Not needed for ordinal chart, :default=false
+                .centerBar(true)
+            // (optional) set gap between bars manually in px, :default=2
+                .gap(1)
+                .brushOn(true)
+            // (optional) set filter brush rounding
+                .round(dc.round.floor)
+                .title(function(d){ return d.value; })
+                .label(function(d){ return d.key; })
+                .alwaysUseRounding(true)
+                .x(d3.scale.linear().domain([0, 90]))
+                .xUnits(function(){return 10;})
+                .renderHorizontalGridLines(true)
+            // customize the filter displayed in the control span
+                .filterPrinter(function (filters) {
+                    var filter = filters[0], s = "";
+                    s += formatNumber(filter[0]) + " -> " + formatNumber(filter[1]);
+                    return s;
+                });
+        
+                ageChart.yAxisLabel('# Subjects');
+                //ageChart.xAxisLabel('Age Group');
+        ageChart.xAxis().tickFormat(function (v) { return v + "'s"; });
+        ageChart.yAxis().ticks(5);
+        //ageChart.xAxisLabel("Age Group");
+        
+        dateChart
+                .renderArea(true)
+                .height(280)
+                .transitionDuration(1000)
+                .margins({top: 30, right: 50, bottom: 25, left: 40})
+                .dimension(date)
+                //.mouseZoomable(true)
+                // Specify a range chart to link the brush extent of the range with the zoom focue of the current chart.
+                //.rangeChart(volumeChart)
+                .x(d3.time.scale().domain([new Date(2013, 11, 1), new Date()]))
+                .round(d3.time.day.round)
+                .xUnits(d3.time.days)
+                .elasticY(true)
+                .renderHorizontalGridLines(true)
+                //.legend(dc.legend().x(800).y(10).itemHeight(13).gap(5))
+                .brushOn(false)
+                // Add the base layer of the stack with group. The second parameter specifies a series name for use in the legend
+                // The `.valueAccessor` will be used for the base layer
+                .group(dates, "Subjects Registered")
+                .valueAccessor(function (d) {
+                    return d.value;
+                })
+                // stack additional layers with `.stack`. The first paramenter is a new group.
+                // The second parameter is the series name. The third is a value accessor.
+                //.stack(monthlyMoveGroup, "Monthly Index Move", function (d) {
+                //    return d.value;
+                //})
+                // title can be called by any stack layer.
+                .title(function (d) {
+                    var value = d.value;
+                    if (isNaN(value)) value = 0;
+                    return formatDate(d.key) + "\n" + formatNumber(value);
+                });
+        
+                dateChart.yAxisLabel('# Subjects');
+
+        
+                testChart.height(180)
+                        .margins({top: 40, right: 50, bottom: 30, left: 40})
+                        .dimension(week)
+                        .group(tests, "None")
+                        .valueAccessor(function(d){
+                            return d.value.nones/d.value.total;
+                        })
+                        .stack(tests, "1-5", function(d){return d.value.ones/d.value.total;})
+                        .stack(tests, "5-10", function(d){return d.value.fives/d.value.total;})
+                        .stack(tests, "10+", function(d){return d.value.tens/d.value.total;})
+                        .stack(tests, "All", function(d){return d.value.alls/d.value.total;})
+                        // .group(nones, "None")
+                        // .stack(fives, "1-5")
+                        // .stack(tens, "6-10")
+                        // .stack(alls, "All")
+                        .elasticY(true)
+                        
+                        .hidableStacks(true)
+                    // (optional) whether bar should be center to its x value. Not needed for ordinal chart, :default=false
+                        .centerBar(true)
+                    // (optional) set gap between bars manually in px, :default=2
+                        .gap(1)
+                        //.brushOn(true)
+                        .legend(dc.legend().x(40).y(10).horizontal(true))
+                    // (optional) set filter brush rounding
+                        // .round(dc.round.floor)
+                        // .title(function(d){ return d.value; })
+                        // .label(function(d){ return d.key; })
+                        //.alwaysUseRounding(true)
+                        .x(d3.time.scale().domain([new Date(2013, 11, 1), new Date()]))
+                        .xUnits(d3.time.weeks)
+                        //.x(d3.scale.linear().domain([201311, 201404]))
+                        // .round(d3.time.day.round)
+                        // .xUnits(function(){return 10;})
+                        .renderHorizontalGridLines(true)
+                    // customize the filter displayed in the control span
+                        .filterPrinter(function (filters) {
+                            var filter = filters[0], s = "";
+                            s += formatDate(filter[0]) + " -> " + formatDate(filter[1]);
+                            return s;
+                        });
+
+                        testChart.yAxis().tickFormat(d3.format("%"));
+            dc.renderAll();
+    });
+    
+
+    
+</script>
+</body>
+</html>
