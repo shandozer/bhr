@@ -1,0 +1,130 @@
+#SurveyEngineBody {
+	background-color: white;
+}
+.Skin #Header {
+}
+.Skin #Footer {
+}
+
+.Skin #SkinContent {
+	background-color: white;
+}
+
+.SkinInner {
+	font-family: arial, Arial, Helvetica, sans-serif;
+}
+
+.Skin .ProgressBarFill {
+	background: #e77016;
+}
+
+.Skin .QuestionText {
+	font-family: arial, Arial, Helvetica, sans-serif;
+	font-size: 18px;
+	padding: 3px;
+	color: #242a29;
+	line-height: 20px;
+	font-weight: bold;
+	font-style: normal;
+}
+
+/* standard text size */
+
+#ProgressBar,
+.Skin label,
+.Skin .QuestionBody {
+	color: #242a29;
+	font-size: 16pt;
+	font-weight: normal;
+	font-family: arial, sans-serif;
+	line-height: 20px; 
+}
+
+::selection {
+	background: #e77016;
+	color: white;
+}
+
+/* highlight active question */
+
+.Skin .QuestionOuter.Highlight .Inner .reg,
+.Skin .QuestionOuter.Highlight .Inner .alt,
+.Skin .QuestionOuter.Highlight .Inner .ReadableAlt,
+.Skin .QuestionOuter.Highlight .Inner .ReadableAlt,
+.Skin .QuestionOuter.Highlight .Inner .LightBG,
+.Skin .QuestionOuter.Highlight .Inner {
+	background: #e9e4e4 url(../img/bg.gif) repeat-x
+}
+
+.Skin #Buttons input[type="submit"]{
+    margin: 0 5px 5px 0;
+    font-size: 16px;
+    font-weight: normal;
+        text-transform: uppercase; 
+    font-family: "Gotham A", arial, Arial, Helvetica, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 16px;
+    padding: 12px 20px;
+    color: #ffffff;
+    border: solid 1px #ffa842;
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    background: #f78d1d;
+    background: -webkit-linear-gradient(left,  #f27a21,  #f06600);
+    background:    -moz-linear-gradient(left,  #f27a21,  #f06600);
+    background:      -o-linear-gradient(left,  #f27a21,  #f06600);
+    background:         linear-gradient(left,  #f27a21,  #f06600);
+    -webkit-box-shadow: 4px 4px 6px #d1d2d2;
+    -moz-box-shadow:    4px 4px 6px #d1d2d2;
+            box-shadow: 4px 4px 6px #d1d2d2;
+}
+
+/* buttons v1
+
+.Skin #Buttons {
+	text-align: right;
+}
+
+.Skin #Buttons input[type="submit"]{
+	margin: 0 5px 5px 0;
+	font-size: 16px;
+	font-weight: bold;
+	font-family: arial, Arial, Helvetica, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	line-height: 16px;
+	padding: 12px 20px;
+	color: #ffffff;
+	border: solid 1px #da7c0c;
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	background: #f78d1d;
+	background: -webkit-linear-gradient(top,  #faa51a,  #f47a20);
+	background:    -moz-linear-gradient(top,  #faa51a,  #f47a20);
+	background:      -o-linear-gradient(top,  #faa51a,  #f47a20);
+	background:         linear-gradient(top,  #faa51a,  #f47a20);
+	-webkit-box-shadow:inset 0px 1px 0px 0px rgba(255, 255, 255, 0.2), 0px 1px 1px 0px rgba(180, 180, 180, 0.4);
+	-moz-box-shadow:   inset 0px 1px 0px 0px rgba(255, 255, 255, 0.2), 0px 1px 1px 0px rgba(180, 180, 180, 0.4);
+        box-shadow:inset         0px 1px 0px 0px rgba(255, 255, 255, 0.2), 0px 1px 1px 0px rgba(180, 180, 180, 0.4);
+	-webkit-transition: all 0.2s ease-in-out;
+       -moz-transition: all 0.2s ease-in-out;
+        -ms-transition: all 0.2s ease-in-out;
+         -o-transition: all 0.2s ease-in-out;
+            transition: all 0.2s ease-in-out;
+}
+
+.Skin #Buttons input[type="submit"]:hover{
+	background-image: linear-gradient(bottom, #f7d9a9 0%, #FFFFFF 100%);
+	background-image: -o-linear-gradient(bottom, #f7d9a9 0%, #FFFFFF 100%);
+	background-image: -moz-linear-gradient(bottom, #f7d9a9 0%, #FFFFFF 100%);
+	background-image: -webkit-linear-gradient(bottom, #f7d9a9 0%, #FFFFFF 100%);
+	background-image: -ms-linear-gradient(bottom, #f7d9a9 0%, #FFFFFF 100%);
+	background-color: #f7c36e;
+	border-color: #ebb459;
+	color: #e98106;
+}
+
+*/

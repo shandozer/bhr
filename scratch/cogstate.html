@@ -1,0 +1,72 @@
+
+	<style type="text/css" media="screen">
+		html, body  { height:100%; }
+        body { margin:0; padding:0; overflow:hidden; text-align:center; background-color: #EEECE1; }   
+        object:focus { outline:none; }
+        #flashContent { display:none; }
+	</style>
+
+
+
+	<script type="text/javascript" src="https://thebraininitiative.cogstate.com/test/swfobject.js"></script>
+
+	<script type="text/javascript">
+		getFlashVersion();
+		function getFlashVersion(){
+
+			if(swfobject.hasFlashPlayerVersion("10.0.2")){
+				startClient();
+			}else{
+				swfobject.createCSS("#flashContent", "display:block;text-align:left; ");
+			  
+			}
+		}
+
+		//window.resizeTo(1024, 768);
+		function startClient(){
+			var temp = swfobject.ua.pv.toString();
+			var d = new Date();
+			tzo = d.getTimezoneOffset();
+			var clientInfo = navigator.userAgent + "::" + screen.width + "x" + screen.height + "::" + screen.colorDepth + "::TimeZone=" + tzo + "::" + navigator.browserLanguage + "::Flash" + swfVersionStr;
+			var swfVersionStr = "10.0.2";
+			var xiSwfUrlStr = "https://thebraininitiative.cogstate.com/files/client/playerProductInstall.swf";
+			var flashvars = {  };
+				flashvars.username = "123";
+				flashvars.gender   = "Male";
+				flashvars.yob      = "1977-01-01";
+				flashvars.handedness = "Left";
+				flashvars.clientInfo = clientInfo;
+				flashvars.translation = "en_US";
+				flashvars.session = "Test";
+				flashvars.siteId = "1";
+				flashvars.configPath = "https://thebraininitiative.cogstate.com/files/client/TheBrainInitiative/config.cogo";
+				flashvars.rootPath = "https://thebraininitiative.cogstate.com/files/client/TheBrainInitiative/";
+
+			
+
+			var params = {};
+			params.quality = "high";
+			params.bgcolor = "#EEECE1";
+			params.allowscriptaccess = "sameDomain";
+			var attributes = {};
+			attributes.id = "FlexClientMain";
+			attributes.name = "FlexClientMain";
+			attributes.align = "middle";
+			swfobject.embedSWF(
+				"https://thebraininitiative.cogstate.com/files/client/TheBrainInitiative/CogStateWeb.swf", "flashContent",
+				"100%", "100%",
+				swfVersionStr, xiSwfUrlStr,
+				flashvars, params, attributes);
+			swfobject.createCSS("#flashContent", "display:block;text-align:left; ");
+		}
+	</script>
+
+	<div id="flashContent">
+       	<p>
+        	To view this page ensure that Adobe Flash Player version
+			10.0.2 or greater is installed.
+		</p>
+		<a href="http://www.adobe.com/go/getflashplayer">
+			<img src="/images/get_flash_player.gif" alt="Get Adobe Flash Player" />
+		</a>
+	</div>	
