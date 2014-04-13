@@ -12,6 +12,7 @@ from qualpy.core import Qualtrics
 sf = Salesforce()
 q = Qualtrics()
 
+
 def download_survey(survey_id, dst):
     if isinstance(survey_id, str):
         surveys = q.get_active_surveys()
@@ -44,6 +45,7 @@ def write_csv(data, filepath):
     writer.writerows(data)
     f.close()
 
+
 def extract(dst):
     sfdir = path.join(dst, 'SF')
     qdir = path.join(dst, 'Q')
@@ -61,15 +63,11 @@ def extract(dst):
     for test in tests:
         if test['Survey_Id__c'] == '':
             continue
-    download_survey(test['Survey_Id__c'], qdir)
+        download_survey(test['Survey_Id__c'], qdir)
 
     download_panel('ML_bxPZH7gxhMTYKt7', qdir)
-    
+
+
 if __name__ == '__main__':
     today = datetime.now().strftime('%Y.%m.%d')
-    
     extract(today)
-# diepy import today/*/*.csv test
-# sqlite3 -header -csv data.db < analysis/summary.sql > analysis/summary.csv
-# sqlite3 -header -csv data.db < analysis/growth.sql > analysis/growth.csv
-# phantomjs analysis/screenshot.js bhr.html reports/BHRDashboard-2014.04.12.png 3076px 2.25

@@ -7,12 +7,12 @@ from data import extract
 
 today = datetime.now().strftime('%Y.%m.%d')
 
-datadir = path.join('data', today)
+datadir = path.join('archive', today)
 
 #extract.extract(datadir)
 cmd = """
 rm data.db
-diepy import data/%(today)s/*/*.csv test
+diepy import archive/%(today)s/*/*.csv test
 sqlite3 -header -csv data.db < analysis/summary.sql > analysis/summary.csv
 sqlite3 -header -csv data.db < analysis/growth.sql > analysis/growth.csv
 phantomjs analysis/screenshot.js analysis/bhr.html reports/BHRDashboard-%(today)s.png 3076px 2.25
