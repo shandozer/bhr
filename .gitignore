@@ -40,3 +40,10 @@ output/*/index.html
 
 # Sphinx
 docs/_build
+
+bower_components
+reports
+archive
+data.db
+screenshots
+*.csv
