@@ -1,97 +1,182 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html lang="en">
-<head>
-    <title>BHR Dashboard</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.css" />
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="bower_components/dcjs/dc.css" />
-    <style>
-        .dc-chart g.row text {
+    <head>
+        <title>
+            BHR Dashboard
+        </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.css" type="text/css">
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" type="text/css">
+        <link rel="stylesheet" href="bower_components/dcjs/dc.css" type="text/css">
+        <style type="text/css">
+.dc-chart g.row text {
           fill: rgb(51, 51, 51);
         }
-    </style>
-</head>
-<body>
-
-<div class="container-fluid">
-    <h1 class="page-header">BHR Dashboard <small id="report-date"></small></h1>
-    <div class="row">
-        <div class="col-md-4" id="age-chart">
-            <strong>By Age</strong>
-            <span class="reset" style="display: none;">range: <span class="filter"></span></span>
-            <a class="reset" href="javascript:ageChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-            <div class="clearfix"></div>
-        </div>
-        <div class="col-md-4" id="gender-chart">
-            <strong>By Gender</strong>
-            <a class="reset" href="javascript:genderChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-            <div class="clearfix"></div>
-        </div>
-        <div class="col-md-4" id="eth-chart">
-            <strong>By Race/Ethnicity</strong>
-            <a class="reset" href="javascript:ethChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-            <div class="clearfix"></div>
-        </div>
-    </div>
-    <div class="row">
-        <div id="test-chart" class="col-md-8">
-            <strong>Test Completion</strong>
-            <a class="reset" href="javascript:testChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-            <div class="clearfix"></div>
-        </div>
-        
-        <div class="col-md-4" id="fh-chart">
-            <strong>Family History of Alzheimer&apos;s</strong>
-            <a class="reset" href="javascript:fhChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-            <div class="clearfix"></div>
-        </div>
-        
-    </div>
-    <div class="row">
-        <div id="date-chart" class="col-xs-12">
-            <strong>New Registrants by Day</strong>
-            <a class="reset" href="javascript:dateChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-            <div class="clearfix"></div>
-        </div>
-    </div>
-    <div class="row">
-        <div id="feedback-chart" class="col-xs-12">
-            <strong>Feedback Ratings by Week</strong>
-            <a class="reset" href="javascript:feedbackChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-            <div class="clearfix"></div>
-        </div>
-    </div>
-</div>
-
-<script src="bower_components/jquery/dist/jquery.min.js"></script>
-<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="bower_components/d3/d3.min.js"></script>
-<script src="bower_components/crossfilter/crossfilter.min.js"></script>
-<script src="bower_components/dcjs/dc.min.js"></script>
-<script src="bower_components/momentjs/min/moment.min.js"></script>
-<script>
+        </style>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <h1 class="page-header">
+                BHR Dashboard <small id="report-date"></small>
+            </h1>
+            <h4 id="data-count" class="alert alert-info">
+                <span class="total-count"></span> Registrants
+            </h4>
+            <div class="row">
+                <div class="col-md-4" id="age-chart">
+                    <strong>By Age</strong> <span class="reset" style="display: none;">range:</span> <a class="reset" href="javascript:ageChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="col-md-4" id="gender-chart">
+                    <strong>By Gender</strong> <a class="reset" href="javascript:genderChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="col-md-4" id="fh-chart">
+                    <strong>Family History of Alzheimer's</strong> <a class="reset" href="javascript:fhChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                    <div class="clearfix"></div>
+                </div>
+                
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="row">
+                        <div id="test-chart" class="col-md-12">
+                            <strong>Test Completion</strong> <a class="reset" href="javascript:testChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="feedback-chart" class="col-md-12">
+                            <strong>Feedback Ratings by Week</strong> <a class="reset" href="javascript:feedbackChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" id="eth-chart">
+                    <strong>By Race/Ethnicity</strong> <a class="reset" href="javascript:ethChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div id="growth-chart" class="col-xs-12">
+                    <strong>Growth</strong>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <!-- <div class="row">
+                <div id="date-chart" class="col-xs-12">
+                    <strong>New Registrants by Day</strong> <a class="reset" href="javascript:dateChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                    <div class="clearfix"></div>
+                </div>
+            </div> -->
+            
+        </div><script src="bower_components/jquery/dist/jquery.min.js" type="text/javascript">
+</script><script src="bower_components/bootstrap/dist/js/bootstrap.min.js" type="text/javascript">
+</script><script src="bower_components/d3/d3.min.js" type="text/javascript">
+</script><script src="bower_components/crossfilter/crossfilter.min.js" type="text/javascript">
+</script><script src="bower_components/dcjs/dc.min.js" type="text/javascript">
+</script><script src="bower_components/momentjs/min/moment.min.js" type="text/javascript">
+</script>
+<script type="text/javascript">
     var reportDate = new Date().toLocaleDateString("en-US");
     $('#report-date').text(reportDate);
-    
+
+    var dataCount = dc.dataCount("#data-count");
     var ageChart = dc.barChart("#age-chart");
     var genderChart = dc.pieChart("#gender-chart");
     var fhChart = dc.pieChart('#fh-chart');
-    var dateChart = dc.lineChart("#date-chart");
+    //var dateChart = dc.lineChart("#date-chart");
     var ethChart = dc.rowChart('#eth-chart');
     var testChart = dc.barChart("#test-chart");
-    var feedbackChart = dc.seriesChart('#feedback-chart');
+    var feedbackChart = dc.compositeChart('#feedback-chart');
+    var growthChart = dc.compositeChart('#growth-chart', 'growth');
     
     var formatNumber = d3.format(",d"),
-            formatPercent = d3.format("%"),
-            formatChange = d3.format("+,d"),
-            formatDate = d3.time.format("%B %d, %Y"),
-            formatTime = d3.time.format("%I:%M %p");
-            
-    d3.csv("data.csv", function(error, subjects) {
-        // Various formatters.
+        formatPercent = d3.format("%"),
+        formatChange = d3.format("+,d"),
+        formatDate = d3.time.format("%B %d, %Y"),
+        formatTime = d3.time.format("%I:%M %p");
+    
+    d3.csv("growth.csv", function(error, data) {
+        data.forEach(function(d, i) {
+            d.index = i;
+            d.day = moment(d.Day);
+            d.dailyN = +d.DailyN;
+            d.totalN = +d.TotalN;
+        });
         
+        var daily = crossfilter(data),
+            all = daily.groupAll(),
+            date = daily.dimension(function(d) { return d.day.toDate(); }),
+            dates = date.group(d3.time.day).reduce(
+                    function(p, v) {
+                        p.dailyN = v.dailyN;
+                        p.totalN = v.totalN;
+                        return p;
+                    },
+                    function(p, v) {
+                        p.dailyN = v.dailyN;
+                        p.totalN = v.totalN;
+                        return p;
+                    },
+                    function(p, v) {
+                        return {
+                            dailyN: 0,
+                            totalN: 0
+                        }
+                    }
+                );
+                
+        growthChart
+            .height(280)
+            .transitionDuration(1000)
+            .margins({top: 30, right: 50, bottom: 25, left: 40})
+            .dimension(date)
+            .x(d3.time.scale().domain([new Date(2013, 11, 1), new Date()]))
+            .round(d3.time.day.round)
+            .xUnits(d3.time.days)
+            .elasticY(true)
+            .renderHorizontalGridLines(true)
+            .brushOn(false)
+            .shareColors(true)
+            .legend(dc.legend().x(40).y(10).horizontal(true))
+            // .title(function (d) {
+//                 var value = d.value;
+//                 if (isNaN(value)) value = 0;
+//                 return formatDate(d.key) + "\n" + formatNumber(value);
+//             })
+.shareTitle(false)
+            .compose([
+                dc.lineChart(growthChart)
+                .renderArea(true)
+                .group(dates, "Total")
+                .valueAccessor(function (d) {
+                    return d.value.totalN;
+                })
+                .title(function (d) {
+                    var value = d.value.totalN;
+                    if (isNaN(value)) value = 0;
+                    return formatDate(d.key) + "\n" + formatNumber(value);
+                })
+                ,
+                dc.lineChart(growthChart)
+                .renderArea(true)
+                .group(dates, "Registered/Day")
+                .valueAccessor(function (d) {
+                    return d.value.dailyN;
+                })
+                .title(function (d) {
+                    var value = d.value.dailyN;
+                    if (isNaN(value)) value = 0;
+                    return formatDate(d.key) + "\n" + formatNumber(value);
+                })
+            ])
+            ;
 
+        growthChart.yAxisLabel('# Subjects');
+        dc.renderAll('growth');
+    });    
+    d3.csv("summary.csv", function(error, subjects) {
         subjects.forEach(function(d, i) {
             d.index = i;
             d.date = moment(d.CreatedDate);
@@ -124,37 +209,49 @@
                 var week = subject.dimension(function(d) { return d.date.startOf('week'); });
                 var feedback = week.group().reduce(
                     function(p, v) {
-                        if (v.easy || v.clear || v.likely)
+                        if (v.easy > 0)
                         {
-                            p.count++;
-                            p.sumEasy += v.easy;
-                            p.avgEasy = p.sumEasy / p.count;
-                            p.sumClear += v.clear;
-                            p.avgClear = p.sumClear / p.count;
-                            p.sumLikely += v.likely;
-                            p.avgLikely = v.sumLikely / p.count;
+                            p.easyCount++;
+                            p.easySum += v.easy;
+                        }
+                        if (v.clear > 0)
+                        {
+                            p.clearCount++;
+                            p.clearSum += v.clear;
+                        }
+                        if (v.likely > 0)
+                        {
+                            p.likelyCount++;
+                            p.likelySum += v.likely;
                         }
                         return p;
                     },
                     function(p, v) {
-                        if (v.easy || v.clear || v.likely)
+                        if (v.easy > 0)
                         {
-                            p.count--;
-                            p.sumEasy -= v.easy;
-                            p.avgEasy = p.sumEasy / p.count;
-                            p.sumClear -= v.clear;
-                            p.avgClear = p.sumClear / p.count;
-                            p.sumLikely -= v.likely;
-                            p.avgLikely = v.sumLikely / p.count;
+                            p.easyCount--;
+                            p.easySum -= v.easy;
+                        }
+                        if (v.clear > 0)
+                        {
+                            p.clearCount--;
+                            p.clearSum -= v.clear;
+                        }
+                        if (v.likely > 0)
+                        {
+                            p.likelyCount--;
+                            p.likelySum -= v.likely;
                         }
                         return p;
                     },
                     function(p, v) {
                         return {
-                            count: 0,
-                            sumEasy: 0,
-                            sumClear: 0,
-                            sumLikely: 0
+                            easySum: 0,
+                            easyCount: 0,
+                            clearSum: 0,
+                            clearCount: 0,
+                            likelySum: 0,
+                            likelyCount: 0
                         }
                     }
                 );
@@ -199,7 +296,11 @@
                                     };
                                 }
                             );
-                            
+                     
+
+        dataCount.dimension(subject)
+                .group(all);   
+                    
         genderChart
                 .height(180) // (optional) define chart height, :default = 200
                 .radius(80) // define pie radius
@@ -255,7 +356,7 @@
          */;
 
         ethChart
-                .height(280) // (optional) define chart height, :default = 200
+                .height(400) // (optional) define chart height, :default = 200
                 .margins({top: 10, right: 50, bottom: 30, left: 10})
                 .dimension(eth) // set dimension
                 .group(ethGroup) // set group
@@ -312,98 +413,160 @@
                     s += formatNumber(filter[0]) + " -> " + formatNumber(filter[1]);
                     return s;
                 });
-        
+
                 ageChart.yAxisLabel('# Subjects');
                 //ageChart.xAxisLabel('Age Group');
         ageChart.xAxis().tickFormat(function (v) { return v + "'s"; });
         ageChart.yAxis().ticks(5);
         //ageChart.xAxisLabel("Age Group");
-        
-        dateChart
-                .renderArea(true)
-                .height(280)
-                .transitionDuration(1000)
-                .margins({top: 30, right: 50, bottom: 25, left: 40})
-                .dimension(date)
-                //.mouseZoomable(true)
-                // Specify a range chart to link the brush extent of the range with the zoom focue of the current chart.
-                //.rangeChart(volumeChart)
-                .x(d3.time.scale().domain([new Date(2013, 11, 1), new Date()]))
-                .round(d3.time.day.round)
-                .xUnits(d3.time.days)
-                .elasticY(true)
-                .renderHorizontalGridLines(true)
-                //.legend(dc.legend().x(800).y(10).itemHeight(13).gap(5))
-                .brushOn(false)
-                // Add the base layer of the stack with group. The second parameter specifies a series name for use in the legend
-                // The `.valueAccessor` will be used for the base layer
-                .group(dates, "Subjects Registered")
-                .valueAccessor(function (d) {
-                    return d.value;
-                })
-                // stack additional layers with `.stack`. The first paramenter is a new group.
-                // The second parameter is the series name. The third is a value accessor.
-                //.stack(monthlyMoveGroup, "Monthly Index Move", function (d) {
-                //    return d.value;
-                //})
-                // title can be called by any stack layer.
-                .title(function (d) {
-                    var value = d.value;
-                    if (isNaN(value)) value = 0;
-                    return formatDate(d.key) + "\n" + formatNumber(value);
-                });
-        
-                dateChart.yAxisLabel('# Subjects');
 
-        
-                testChart.height(180)
-                        .margins({top: 40, right: 50, bottom: 30, left: 40})
-                        .dimension(week)
-                        .group(tests, "None")
-                        .valueAccessor(function(d){
-                            return d.value.nones/d.value.total;
-                        })
-                        .stack(tests, "1-5", function(d){return d.value.ones/d.value.total;})
-                        .stack(tests, "5-10", function(d){return d.value.fives/d.value.total;})
-                        .stack(tests, "10+", function(d){return d.value.tens/d.value.total;})
-                        .stack(tests, "All", function(d){return d.value.alls/d.value.total;})
-                        // .group(nones, "None")
-                        // .stack(fives, "1-5")
-                        // .stack(tens, "6-10")
-                        // .stack(alls, "All")
-                        .elasticY(true)
-                        
-                        .hidableStacks(true)
+        // dateChart
+        //         .renderArea(true)
+        //         .height(280)
+        //         .transitionDuration(1000)
+        //         .margins({top: 30, right: 50, bottom: 25, left: 40})
+        //         .dimension(date)
+        //         //.mouseZoomable(true)
+        //         // Specify a range chart to link the brush extent of the range with the zoom focue of the current chart.
+        //         //.rangeChart(volumeChart)
+        //         .x(d3.time.scale().domain([new Date(2013, 11, 1), new Date()]))
+        //         .round(d3.time.day.round)
+        //         .xUnits(d3.time.days)
+        //         .elasticY(true)
+        //         .renderHorizontalGridLines(true)
+        //         //.legend(dc.legend().x(800).y(10).itemHeight(13).gap(5))
+        //         .brushOn(false)
+        //         // Add the base layer of the stack with group. The second parameter specifies a series name for use in the legend
+        //         // The `.valueAccessor` will be used for the base layer
+        //         .group(dates, "Subjects Registered")
+        //         .valueAccessor(function (d) {
+        //             return d.value;
+        //         })
+        //         // stack additional layers with `.stack`. The first paramenter is a new group.
+        //         // The second parameter is the series name. The third is a value accessor.
+        //         //.stack(monthlyMoveGroup, "Monthly Index Move", function (d) {
+        //         //    return d.value;
+        //         //})
+        //         // title can be called by any stack layer.
+        //         .title(function (d) {
+        //             var value = d.value;
+        //             if (isNaN(value)) value = 0;
+        //             return formatDate(d.key) + "\n" + formatNumber(value);
+        //         });
+        // 
+        //     dateChart.yAxisLabel('# Subjects');
+
+            testChart.height(180)
+                    .margins({top: 40, right: 50, bottom: 30, left: 40})
+                    .dimension(week)
+                    .group(tests, "None")
+                    .valueAccessor(function(d){
+                        return d.value.nones/d.value.total;
+                    })
+                    .stack(tests, "1-5", function(d){return d.value.ones/d.value.total;})
+                    .stack(tests, "5-10", function(d){return d.value.fives/d.value.total;})
+                    .stack(tests, "10+", function(d){return d.value.tens/d.value.total;})
+                    .stack(tests, "All", function(d){return d.value.alls/d.value.total;})
+                    .elasticY(true)
+                    
+                    .hidableStacks(true)
                     // (optional) whether bar should be center to its x value. Not needed for ordinal chart, :default=false
-                        .centerBar(true)
+                    .centerBar(true)
                     // (optional) set gap between bars manually in px, :default=2
-                        .gap(1)
-                        //.brushOn(true)
-                        .legend(dc.legend().x(40).y(10).horizontal(true))
+                    .gap(1)
+                    //.brushOn(true)
+                    .legend(dc.legend().x(40).y(10).horizontal(true))
                     // (optional) set filter brush rounding
-                        // .round(dc.round.floor)
-                        // .title(function(d){ return d.value; })
-                        // .label(function(d){ return d.key; })
-                        //.alwaysUseRounding(true)
-                        .x(d3.time.scale().domain([new Date(2013, 11, 1), new Date()]))
-                        .xUnits(d3.time.weeks)
-                        //.x(d3.scale.linear().domain([201311, 201404]))
-                        // .round(d3.time.day.round)
-                        // .xUnits(function(){return 10;})
-                        .renderHorizontalGridLines(true)
+                    // .round(dc.round.floor)
+                    // .title(function(d){ return d.value; })
+                    // .label(function(d){ return d.key; })
+                    //.alwaysUseRounding(true)
+                    .x(d3.time.scale().domain([new Date(2013, 11, 1), new Date()]))
+                    .xUnits(d3.time.weeks)
+                    //.x(d3.scale.linear().domain([201311, 201404]))
+                    // .round(d3.time.day.round)
+                    // .xUnits(function(){return 10;})
+                    .renderHorizontalGridLines(true)
                     // customize the filter displayed in the control span
-                        .filterPrinter(function (filters) {
-                            var filter = filters[0], s = "";
-                            s += formatDate(filter[0]) + " -> " + formatDate(filter[1]);
-                            return s;
-                        });
+                    .filterPrinter(function (filters) {
+                        var filter = filters[0], s = "";
+                        s += formatDate(filter[0]) + " -> " + formatDate(filter[1]);
+                        return s;
+                    });
 
-                        testChart.yAxis().tickFormat(d3.format("%"));
+            testChart.yAxis().tickFormat(d3.format("%"));
+                        
+            feedbackChart
+                    .height(180)
+                    //.hidableStacks(true)
+                    .transitionDuration(1000)
+                    .margins({top: 30, right: 50, bottom: 25, left: 40})
+                    .dimension(week)
+                    .shareTitle(false)
+                    .compose([
+                        dc.lineChart(feedbackChart)
+                        .colors('#1f77b4')
+                            .group(feedback, "How Easy")
+                            .valueAccessor(function (d) {
+                                if(d.value.easySum == 0)
+                                    return 0;
+                                var x = d.value.easySum/d.value.easyCount;
+                                return x;
+                            })
+                            .title(function (d) {
+                                var x = 0;
+                                if(d.value.easySum > 0)
+                                    x = d.value.easySum/d.value.easyCount;
+                                return formatNumber(x);
+                            }),
+                        dc.lineChart(feedbackChart)
+                        .colors('#ff7f0e')
+                            .group(feedback, "How Clear")
+                            .valueAccessor(function(d){ 
+                                if(d.value.clearSum == 0)
+                                    return 0;
+                                var x = d.value.clearSum/d.value.clearCount;
+                                return x;
+                            })
+                            .title("How Clear", function (d) {
+                                var x = 0;
+                                if(d.value.clearSum > 0)
+                                    x = d.value.clearSum/d.value.clearCount;
+                                return formatNumber(x);
+                            }),
+                            dc.lineChart(feedbackChart)
+                            .colors('#2ca02c')
+                                .group(feedback, "How Likely")
+                                .valueAccessor(function(d){ 
+                                    if(d.value.likelySum == 0)
+                                        return 0;
+                                    var x = d.value.likelySum/d.value.likelyCount;
+                                    return x;
+                                })
+                                .title("How Likely", function (d) {
+                                    var x = 0;
+                                    if(d.value.likelySum > 0)
+                                        x = d.value.likelySum/d.value.likelyCount;
+                                    return formatNumber(x);
+                                })
+                    ])
+                    .x(d3.time.scale().domain([new Date(2013, 11, 1), new Date()]))
+                    .xUnits(d3.time.weeks)
+                    .elasticY(true)
+                    //.y(d3.scale.linear().domain([0,10]).range([0, 0]))
+                    .renderHorizontalGridLines(true)
+                    //.legend(dc.legend().x(70).y(10).itemHeight(13).gap(5))
+                    .legend(dc.legend().x(50).y(10).horizontal(true))
+                    .brushOn(false)
+                    ;
+                    
+            feedbackChart.yAxisLabel('Rating');
+                                
             dc.renderAll();
-    });
-    
+        });
 
-    
-</script>
-</body>
+
+
+        </script>
+    </body>
 </html>
