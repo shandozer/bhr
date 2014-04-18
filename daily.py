@@ -9,7 +9,7 @@ today = datetime.now().strftime('%Y.%m.%d')
 
 datadir = path.join('archive', today)
 
-#extract.extract(datadir)
+extract.extract(datadir)
 cmd = """
 rm data.db
 diepy import archive/%(today)s/*/*.csv test

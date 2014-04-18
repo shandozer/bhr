@@ -25,7 +25,7 @@ def download_survey(survey_id, dst):
 
 
 def download_panel(panel_id, dst):
-    if isinstance(panel, str):
+    if isinstance(panel_id, str):
         panels = q.get_panels()
         panel = [p for p in panels if p['PanelID'] == panel_id][0]
     print('Downloading "%s" ...' % panel['Name'])
@@ -58,7 +58,7 @@ def extract(dst):
     sf.export('Contact', path.join(sfdir, 'Contact.csv'))
     sf.export('Questionnaire_Response__c', path.join(sfdir, 'Questionnaire_Response__c.csv'))
     sf.export('Subtab__c', path.join(sfdir, 'Subtab__c.csv'))
-
+    
     tests = sf.get_data('Subtab__c')
     for test in tests:
         if test['Survey_Id__c'] == '':
