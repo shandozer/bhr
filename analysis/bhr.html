@@ -17,11 +17,11 @@
     <body>
         <div class="container-fluid">
             <h1 class="page-header">
-                BHR Dashboard <small id="report-date"></small>
+                <p>BHR Dashboard <small id="report-date"></small></p>
             </h1>
-            <h4 id="data-count" class="alert alert-info">
+            <blockquote id="data-count" class="bg-info">
                 <span class="total-count"></span> Registrants
-            </h4>
+            </blockquote>
             <div class="row">
                 <div class="col-md-4" id="age-chart">
                     <strong>By Age</strong> <span class="reset" style="display: none;">range:</span> <a class="reset" href="javascript:ageChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -398,7 +398,7 @@
                 .centerBar(true)
             // (optional) set gap between bars manually in px, :default=2
                 .gap(1)
-                .brushOn(true)
+                .brushOn(false)
             // (optional) set filter brush rounding
                 .round(dc.round.floor)
                 .title(function(d){ return d.value; })
