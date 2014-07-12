@@ -5,17 +5,28 @@ SELECT
     , Has_Initial_Questionnaire_Completed__c
     , Race_Ethnicity_Selected__c
     , Family_Members_has_Alzheimer__c
+    , Memory_problem_concerns__c
+    , Has_Sleep_Problems__c
     , t.TestsCompleted
     , t.CompletionRate
     , t.QuestionnairesCompleted
     , t.QuestionnairesCompletedPct
     , t.CogStateCompleted
     , t.LumosityCompleted
+    , Change_in_memory_in_past_10_years__c
+    , Use_Recreational_Drugs__c
+    , Health__c
+    , Previous_Year_Health__c
+    , Alcoholic_drinks_frequency__c
+    , Diabetes__c
+    , In_good_spirits__c
+    , Smoke_cigarettes__c
+    , Trouble_remembering__c
     , CASE
             WHEN t.CogStateCompleted > 0 AND t.LumosityCompleted > 0 THEN 'Both'
             WHEN t.CogStateCompleted = 0 AND t.LumosityCompleted > 0 THEN 'Lumosity'
             WHEN t.CogStateCompleted > 0 AND t.LumosityCompleted = 0 THEN 'CogState'
-            ELSE 'None'
+            ELSE 'Neither'
         END AS TestStatus
     , f.HowEasy
     , f.HowClear
@@ -43,7 +54,7 @@ LEFT OUTER JOIN
     ON
       Contact__c = c.Id
     WHERE
-      s.Status__c = 'Active'
+      (s.Status__c = 'Active' OR s.Name = 'Lumosity Test')
       AND s.Name NOT IN ('My Profile', 'Feedback')
       AND c.CreatedDate > s.CreatedDate
     GROUP BY

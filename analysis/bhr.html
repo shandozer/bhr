@@ -23,52 +23,74 @@
                 <span class="total-count"></span> Registrants
             </blockquote>
             <div class="row">
-                <div class="col-md-4" id="age-chart">
-                    <strong>By Age</strong> <span class="reset" style="display: none;">range:</span> <a class="reset" href="javascript:ageChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                <div class="col-md-6" id="age-chart">
+                    <strong>Age</strong> <span class="reset" style="display: none;">range:</span> <a class="reset" href="javascript:ageChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
                     <div class="clearfix"></div>
                 </div>
-                <div class="col-md-4" id="gender-chart">
-                    <strong>By Gender</strong> <a class="reset" href="javascript:genderChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                <div class="col-md-3" id="gender-chart">
+                    <strong>Gender</strong> <a class="reset" href="javascript:genderChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
                     <div class="clearfix"></div>
                 </div>
-                <div class="col-md-4" id="fh-chart">
+                <div class="col-md-3" id="fh-chart">
                     <strong>Family History of Alzheimer's</strong> <a class="reset" href="javascript:fhChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
                     <div class="clearfix"></div>
                 </div>
-                
             </div>
             <div class="row">
-                <div class="col-md-8">
-                    <div class="row">
-                        <div id="questionnaire-chart" class="col-md-12">
-                            <strong>Questionnaire Completion</strong> <a class="reset" href="javascript:questionnaireChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-                            <div class="clearfix"></div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div id="test-chart" class="col-md-12">
-                            <strong>Test Completion</strong> <a class="reset" href="javascript:testChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-                            <div class="clearfix"></div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div id="feedback-chart" class="col-md-12">
-                            <strong>Feedback Ratings by Week</strong> <a class="reset" href="javascript:feedbackChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-                            <div class="clearfix"></div>
-                        </div>
-                    </div>
+                <div class="col-md-6" id="eth-chart">
+                    <strong>Race/Ethnicity</strong> <a class="reset" href="javascript:ethChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                    <div class="clearfix"></div>
                 </div>
-                <div class="col-md-4" id="eth-chart">
-                    <strong>By Race/Ethnicity</strong> <a class="reset" href="javascript:ethChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                
+                <div class="col-md-3" id="mem-chart">
+                    <strong>Memory Concern</strong> <a class="reset" href="javascript:memChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="col-md-3" id="sleep-chart">
+                    <strong>Sleep Problems</strong> <a class="reset" href="javascript:sleepChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
                     <div class="clearfix"></div>
                 </div>
             </div>
             <div class="row">
-                <div id="growth-chart" class="col-xs-12">
+                <div id="growth-chart" class="col-md-12">
                     <strong>Growth</strong>
                     <div class="clearfix"></div>
                 </div>
             </div>
+            <div class="row">
+                <div id="feedback-chart" class="col-md-12">
+                    <strong>Feedback Ratings by Week</strong> <a class="reset" href="javascript:feedbackChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="row" style="page-break-before: always;">
+                <div id="questionnaire-chart" class="col-md-9">
+                    <strong>Questionnaire Completion</strong> <a class="reset" href="javascript:questionnaireChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="col-md-3" id="q-status-chart">
+                    <strong>Overall</strong> <a class="reset" href="javascript:qStatusChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div id="test-chart" class="col-md-9">
+                    <strong>Cognitive Test Completion</strong> <a class="reset" href="javascript:testChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="col-md-3" id="test-status-chart">
+                    <strong>Overall</strong> <a class="reset" href="javascript:testStatusChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div id="registered-chart" class="col-md-9">
+                    <strong>Registered</strong> <a class="reset" href="javascript:registeredChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            
+            
             <!-- <div class="row">
                 <div id="date-chart" class="col-xs-12">
                     <strong>New Registrants by Day</strong> <a class="reset" href="javascript:dateChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -91,13 +113,17 @@
     var ageChart = dc.barChart("#age-chart");
     var genderChart = dc.pieChart("#gender-chart");
     var fhChart = dc.pieChart('#fh-chart');
+    var memChart = dc.pieChart('#mem-chart');
+    var sleepChart = dc.pieChart('#sleep-chart');
     //var dateChart = dc.lineChart("#date-chart");
     var ethChart = dc.rowChart('#eth-chart');
     var testChart = dc.barChart('#test-chart');
+    var testStatusChart = dc.pieChart('#test-status-chart');
+    var qStatusChart = dc.pieChart('#q-status-chart');
     var questionnaireChart = dc.barChart("#questionnaire-chart");
     var feedbackChart = dc.compositeChart('#feedback-chart');
     var growthChart = dc.compositeChart('#growth-chart', 'growth');
-    
+    var registeredChart = dc.barChart('#registered-chart');
     var formatNumber = d3.format(",d"),
         formatPercent = d3.format("%"),
         formatChange = d3.format("+,d"),
@@ -180,7 +206,7 @@
             ])
             ;
 
-        growthChart.yAxisLabel('# Subjects');
+        //growthChart.yAxisLabel('# Subjects');
         dc.renderAll('growth');
     });    
     d3.csv("summary.csv", function(error, subjects) {
@@ -191,6 +217,8 @@
             d.gender = d.Gender__c || "Unknown";
             d.fh = d.Family_Members_has_Alzheimer__c || "Unknown";
             d.eth = d.Race_Ethnicity_Selected__c.indexOf(';') > -1 ? "Mixed": d.Race_Ethnicity_Selected__c || "Unknown";
+            d.mem = d.Memory_problem_concerns__c || "Unknown";
+            d.sleep = d.Has_Sleep_Problems__c || "Unknown";
             d.tests = +d.TestsCompleted;
             d.questionnaires = +d.QuestionnairesCompleted;
             d.rate = +d.CompletionRate;
@@ -200,6 +228,19 @@
             d.testStatus = d.TestStatus;
         });
 
+        var colorizer = function(chart){
+                chart.selectAll("g.pie-slice path").attr("fill", function(d){
+                    if(d.key=="None")
+                        return "#d62728";
+                    else if(d.key=="All")
+                        return "#2ca02c";
+                    else if (d.key == "Lumosity")
+                        return "#1f77b4";
+                    else if (d.key == "CogState")
+                        return "#9467bd";
+                });
+            };
+            
         var subject = crossfilter(subjects),
                 all = subject.groupAll(),
                 date = subject.dimension(function(d) { return d.date.toDate(); }),
@@ -210,12 +251,44 @@
                 genders = gender.group(),
                 fh = subject.dimension(function(d) { return d.fh; }),
                 fhGroup = fh.group(),
+                mem = subject.dimension(function(d){ return d.mem; }),
+                memGroup = mem.group(),
+                sleep = subject.dimension(function(d) { return d.sleep; }),
+                sleepGroup = sleep.group(),
                 eth = subject.dimension(function(d){ return d.eth; }),
                 ethGroup = eth.group(),
+                testStatus = subject.dimension(function(d) { return d.testStatus; }),
+                testStatusGroup = testStatus.group(),
+                qStatus = subject.dimension(function(d) {  
+                    if (d.questionnaires == 0)
+                        return "None";
+                    if (d.questionnaires > 0 && d.questionnaires < 4)
+                        return "1-3";
+                    if (d.questionnaires >= 4 && d.questionnaires < 7)
+                        return "4-6";
+                    if (d.questionnaires >= 7 && d.questionnaires < 10)
+                        return "7-9";
+                    if (d.questionnaires == 10)
+                        return "All";
+                }),
+                qStatusGroup = qStatus.group(),
                 age = subject.dimension(function(d) { return Math.max(-60, Math.min(149, d.age)); }),
                 ages = age.group(function(d) { return Math.floor(d / 10) * 10; });
 
                 var week = subject.dimension(function(d) { return d.date.startOf('week'); });
+                var registered = week.group().reduce(
+                    function(p, v) {
+                        p++;
+                        return p;
+                    },
+                    function(p, v) {
+                        p--;
+                        return p;
+                    },
+                    function(p, v) {
+                        return 0;
+                    }
+                );
                 var feedback = week.group().reduce(
                     function(p, v) {
                         if (v.easy > 0)
@@ -309,7 +382,7 @@
                 var tests = week.group().reduce(
                                 function(p, v) {
                                     p.total++;
-                                    if (v.testStatus == 'None')
+                                    if (v.testStatus == 'Neither')
                                         p.nones++;
                                     if (v.testStatus == 'CogState')
                                         p.cogState++;
@@ -322,7 +395,7 @@
                                 },
                                 function(p, v) {
                                     p.total--;
-                                    if (v.testStatus == 'None')
+                                    if (v.testStatus == 'Neither')
                                         p.nones--;
                                     if (v.testStatus == 'CogState')
                                         p.cogState--;
@@ -346,7 +419,8 @@
 
         dataCount.dimension(subject)
                 .group(all);   
-                    
+        
+        
         genderChart
                 .height(180) // (optional) define chart height, :default = 200
                 .radius(80) // define pie radius
@@ -359,7 +433,8 @@
                     if (genderChart.hasFilter() && !genderChart.hasFilter(d.key))
                         return "0%";
                     return Math.floor(d.value / all.value() * 100) + "%";
-                }) /*
+                }) 
+        /*
          // (optional) whether chart should render labels, :default = true
          .renderLabel(true)
          // (optional) if inner radius is used then a donut chart will be generated instead of pie chart
@@ -368,17 +443,30 @@
          .transitionDuration(500)
          // (optional) define color array for slices
          .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+            
          // (optional) define color domain to match your data domain if you want to bind data or color
          .colorDomain([-1750, 1644])
          // (optional) define color value accessor
          .colorAccessor(function(d, i){return d.value;})
-         */;
+         */
+        .ordinalColors(['#e377c2','#1f77b4','#aec7e8'])
+        //.colorAccessor(function(d, i){return d.key;})
+            // .getColor(function(d, i){
+            //     if (d.key == 'Female')
+            //         return '#e377c2';
+            //     
+            //     if(d.key == 'Male')
+            //         return '#1f77b4';
+            //     return '#aec7e8';
+            // })
+            ;
 
         fhChart
                 .height(180) // (optional) define chart height, :default = 200
                 .radius(80) // define pie radius
                 .dimension(fh) // set dimension
                 .group(fhGroup) // set group
+                .ordinalColors(['#3182bd','#aec7e8','#31a354'])
             /* (optional) by default pie chart will use group.key as it's label
              * but you can overwrite it with a closure */
                 .legend(dc.legend().x(0).y(0).gap(5))
@@ -401,8 +489,69 @@
          .colorAccessor(function(d, i){return d.value;})
          */;
 
+        memChart
+                .height(180) // (optional) define chart height, :default = 200
+                .radius(80) // define pie radius
+                .dimension(mem) // set dimension
+                .group(memGroup) // set group
+                .ordinalColors(['#3182bd','#aec7e8','#31a354'])
+            /* (optional) by default pie chart will use group.key as it's label
+             * but you can overwrite it with a closure */
+                .legend(dc.legend().x(0).y(0).gap(5))
+                .label(function (d) {
+                    if (memChart.hasFilter() && !memChart.hasFilter(d.key))
+                        return "0%";
+                    return Math.floor(d.value / all.value() * 100) + "%";
+                });
+                
+        sleepChart
+                .height(180) // (optional) define chart height, :default = 200
+                .radius(80) // define pie radius
+                .dimension(sleep) // set dimension
+                .group(sleepGroup) // set group
+                .ordinalColors(['#3182bd','#aec7e8','#31a354'])
+            /* (optional) by default pie chart will use group.key as it's label
+             * but you can overwrite it with a closure */
+                .legend(dc.legend().x(0).y(0).gap(5))
+                .label(function (d) {
+                    if (sleepChart.hasFilter() && !sleepChart.hasFilter(d.key))
+                        return "0%";
+                    return Math.floor(d.value / all.value() * 100) + "%";
+                });
+                        
+        testStatusChart
+                .height(180) // (optional) define chart height, :default = 200
+                .radius(80) // define pie radius
+                .colors(d3.scale.category10())
+                .dimension(testStatus) // set dimension
+                .group(testStatusGroup) // set group
+            /* (optional) by default pie chart will use group.key as it's label
+             * but you can overwrite it with a closure */
+                .legend(dc.legend().x(0).y(0).gap(5))
+                .label(function (d) {
+                    if (testStatusChart.hasFilter() && !testStatusChart.hasFilter(d.key))
+                        return "0%";
+                    return Math.floor(d.value / all.value() * 100) + "%";
+                });
+        
+        qStatusChart
+                .height(180) // (optional) define chart height, :default = 200
+                .radius(80) // define pie radius
+                //.colors(d3.scale.category10())
+                .ordinalColors(['#ff7f0e','#9467bd','#1f77b4','#2ca02c','#d62728'])
+                .dimension(qStatus) // set dimension
+                .group(qStatusGroup) // set group
+            /* (optional) by default pie chart will use group.key as it's label
+             * but you can overwrite it with a closure */
+                .legend(dc.legend().x(0).y(0).gap(5))
+                .label(function (d) {
+                    if (qStatusChart.hasFilter() && !qStatusChart.hasFilter(d.key))
+                        return "0%";
+                    return Math.floor(d.value / all.value() * 100) + "%";
+                });
+                            
         ethChart
-                .height(400) // (optional) define chart height, :default = 200
+                .height(280) // (optional) define chart height, :default = 200
                 .margins({top: 10, right: 50, bottom: 30, left: 10})
                 .dimension(eth) // set dimension
                 .group(ethGroup) // set group
@@ -460,7 +609,7 @@
                     return s;
                 });
 
-                ageChart.yAxisLabel('# Subjects');
+                //ageChart.yAxisLabel('# Subjects');
                 //ageChart.xAxisLabel('Age Group');
         ageChart.xAxis().tickFormat(function (v) { return v + "'s"; });
         ageChart.yAxis().ticks(5);
@@ -502,6 +651,35 @@
         // 
         //     dateChart.yAxisLabel('# Subjects');
 
+        registeredChart.height(180)
+                .margins({top: 40, right: 50, bottom: 30, left: 40})
+                .dimension(week, 'Registered')
+                .group(registered)
+                .elasticY(false)
+                
+                // (optional) whether bar should be center to its x value. Not needed for ordinal chart, :default=false
+                .centerBar(true)
+                // (optional) set gap between bars manually in px, :default=2
+                .gap(1)
+                //.brushOn(true)
+                // (optional) set filter brush rounding
+                // .round(dc.round.floor)
+                // .title(function(d){ return d.value; })
+                // .label(function(d){ return d.key; })
+                //.alwaysUseRounding(true)
+                .x(d3.time.scale().domain([new Date(2013, 11, 1), new Date()]))
+                .xUnits(d3.time.weeks)
+                //.x(d3.scale.linear().domain([201311, 201404]))
+                // .round(d3.time.day.round)
+                // .xUnits(function(){return 10;})
+                .renderHorizontalGridLines(true)
+                // customize the filter displayed in the control span
+                .filterPrinter(function (filters) {
+                    var filter = filters[0], s = "";
+                    s += formatDate(filter[0]) + " -> " + formatDate(filter[1]);
+                    return s;
+                });
+                
             questionnaireChart.height(180)
                     .margins({top: 40, right: 50, bottom: 30, left: 40})
                     .dimension(week)
@@ -513,6 +691,7 @@
                     .stack(questionnaires, "4-6", function(d){return d.value.fours/d.value.total;})
                     .stack(questionnaires, "7-9", function(d){return d.value.sevens/d.value.total;})
                     .stack(questionnaires, "All", function(d){return d.value.alls/d.value.total;})
+                    .ordinalColors(['#d62728','#ff7f0e','#9467bd', '#1f77b4','#2ca02c'])
                     .elasticY(false)
                     
                     .hidableStacks(true)
@@ -545,7 +724,7 @@
             testChart.height(180)
                     .margins({top: 40, right: 50, bottom: 30, left: 40})
                     .dimension(week)
-                    .group(tests, "None")
+                    .group(tests, "Neither")
                     .valueAccessor(function(d){
                         return d.value.nones/d.value.total;
                     })
@@ -572,6 +751,7 @@
                     // .round(d3.time.day.round)
                     // .xUnits(function(){return 10;})
                     .renderHorizontalGridLines(true)
+                    .ordinalColors(['#d62728','#ff7f0e','#1f77b4','#2ca02c'])
                     // customize the filter displayed in the control span
                     .filterPrinter(function (filters) {
                         var filter = filters[0], s = "";
@@ -645,7 +825,7 @@
                     .brushOn(false)
                     ;
                     
-            feedbackChart.yAxisLabel('Rating');
+            //feedbackChart.yAxisLabel('Rating');
                                 
             dc.renderAll();
         });

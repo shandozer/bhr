@@ -1,6 +1,4 @@
-
-WITH
-Daily(Day, N)
+WITH Daily(Day, N)
 AS (
     SELECT
         date(CreatedDate) AS Day
@@ -12,8 +10,8 @@ AS (
 )
 SELECT
 Day
-, N AS DailyN
 , ( SELECT SUM(N) FROM Daily WHERE Day <= d.Day) AS TotalN
+, N AS DailyN
 FROM
 Daily d
 ;

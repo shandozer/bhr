@@ -56,8 +56,11 @@ def extract(dst):
         os.makedirs(qdir)
         
     sf.export('Contact', path.join(sfdir, 'Contact.csv'))
+    sf.export('CampaignMember', path.join(sfdir, 'Campaign_Member.csv'))
     sf.export('Questionnaire_Response__c', path.join(sfdir, 'Questionnaire_Response__c.csv'))
     sf.export('Subtab__c', path.join(sfdir, 'Subtab__c.csv'))
+    sf.export('Consent_Terms__c', path.join(sfdir, 'Consent_Terms__c.csv'))
+    sf.export('Consent_History_Tracking__c', path.join(sfdir, 'Consent_History_Tracking__c.csv'))
     
     tests = sf.get_data('Subtab__c')
     for test in tests:
