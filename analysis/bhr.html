@@ -89,6 +89,12 @@
                     <div class="clearfix"></div>
                 </div>
             </div>
+            <div class="row">
+                <div id="source-chart" class="col-md-12">
+                    <strong>By Source</strong> <a class="reset" href="javascript:sourceChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
             
             
             <!-- <div class="row">
@@ -124,6 +130,7 @@
     var feedbackChart = dc.compositeChart('#feedback-chart');
     var growthChart = dc.compositeChart('#growth-chart', 'growth');
     var registeredChart = dc.barChart('#registered-chart');
+    var sourceChart = dc.rowChart('#source-chart');
     var formatNumber = d3.format(",d"),
         formatPercent = d3.format("%"),
         formatChange = d3.format("+,d"),
@@ -226,6 +233,7 @@
             d.clear = +d.HowClear;
             d.likely = +d.HowLikely;
             d.testStatus = d.TestStatus;
+            d.source = d.LeadSource || "Unknown";
         });
 
         var colorizer = function(chart){
@@ -257,6 +265,8 @@
                 sleepGroup = sleep.group(),
                 eth = subject.dimension(function(d){ return d.eth; }),
                 ethGroup = eth.group(),
+                source = subject.dimension(function(d){ return d.source; }),
+                sourceGroup = source.group(),
                 testStatus = subject.dimension(function(d) { return d.testStatus; }),
                 testStatusGroup = testStatus.group(),
                 qStatus = subject.dimension(function(d) {  
@@ -582,7 +592,23 @@
          .colorAccessor(function(d, i){return d.value;})
          */;
                 
-                
+                sourceChart
+                        .height(600) // (optional) define chart height, :default = 200
+                        .margins({top: 10, right: 50, bottom: 30, left: 10})
+                        .dimension(source) // set dimension
+                        .group(sourceGroup) // set group
+                    /* (optional) by default pie chart will use group.key as it's label
+                     * but you can overwrite it with a closure */
+                        .legend(dc.legend().x(0).y(0).gap(5))
+                        .title(function(d) {
+                            return d.value;
+                        })
+                        //.renderLabel(true)
+                        .label(function (d) {
+                            if (sourceChart.hasFilter() && !sourceChart.hasFilter(d.key))
+                                return "0% " + d.key;
+                            return Math.floor(d.value / all.value() * 1000)/10 + "% " + d.key;
+                        }); 
                                 
         ageChart.dimension(age)
                 .group(ages)

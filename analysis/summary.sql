@@ -31,6 +31,7 @@ SELECT
     , f.HowEasy
     , f.HowClear
     , f.HowLikely
+    , c.LeadSource
 FROM
     Contact c
 LEFT OUTER JOIN
