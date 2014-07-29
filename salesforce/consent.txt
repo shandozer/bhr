@@ -1,0 +1,12 @@
+Agree
+1. Update CampaignMember: Consent_Status__c = 'Agree'
+2. Log in Consent History
+
+Decline
+1. Update CampaignMember: Consent_Status__c = 'Decline'
+
+
+Revoke
+1. CampaignMember.Consent_Status__c = 'Decline'
+
+
