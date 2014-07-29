@@ -47,3 +47,4 @@ archive
 data.db
 screenshots
 *.csv
+.idea
