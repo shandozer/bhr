@@ -5,8 +5,7 @@
             BHR Dashboard
         </title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.css" type="text/css">
-        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" type="text/css">
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" type="text/css">
         <link rel="stylesheet" href="bower_components/dcjs/dc.css" type="text/css">
         <style type="text/css">
 .dc-chart g.row text {
@@ -20,8 +19,33 @@
                 <p>BHR Dashboard <small id="report-date"></small></p>
             </h1>
             <blockquote id="data-count" class="bg-info">
-                <span class="total-count"></span> Registrants
+                <span class="filter-count"></span> Registrants
+                <a class="reset" href="javascript:genderChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
             </blockquote>
+            <div class="row">
+                <div class="col-md-6">
+                    <a class="list-group-item" id="past7">
+                        Past 7 Days <span class="number-display badge">
+                    </a>
+                    <a class="list-group-item" id="previous7">
+                        Previous 7 Days <span class="number-display badge">
+                    </a>
+                    <a class="list-group-item" id="past30">
+                        Past 30 Days <span class="number-display badge">
+                    </a>
+                    <a class="list-group-item" id="previous30">
+                        Previous 30 Days <span class="number-display badge">
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <div class="list-group">
+                <a id="lumosity-1" href="#" class="list-group-item">Lumosity #1 (20,000 Lumosity members over 55 in the Bay Area)</a>
+                <a id="lumosity-2" href="#" class="list-group-item">Lumosity #2 (70,000 Lumosity members between 18-55 in the Bay Area)</a>
+                <a id="launch-week" href="#" class="list-group-item">Launch Week (4/8/2014 - 4/15/2014)</a>
+                <a id="apr" href="#" class="list-group-item">Alzheimer's Prevention Registry</a>
+                </div>
+            </div>
+            </div>
             <div class="row">
                 <div class="col-md-6" id="age-chart">
                     <strong>Age</strong> <span class="reset" style="display: none;">range:</span> <a class="reset" href="javascript:ageChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -166,7 +190,24 @@
                         }
                     }
                 );
-                
+        
+                // date.filterRange([moment().add('days', -7).toDate(), new Date()]);
+                // var past7 = all.reduceSum(function(d) { return d.dailyN; }).value;
+                // $('#past7 .number-display').text(past7)
+                //
+                // date.filterRange([moment().add('days', -14).toDate(), moment().add('days', -7).toDate()]);
+                // var past7 = all.reduceSum(function(d) { return d.dailyN; }).value;
+                // $('#previous7 .number-display').text(past7)
+                //
+                // date.filterRange([moment().add('days', -30).toDate(), new Date()]);
+                // var past7 = all.reduceSum(function(d) { return d.dailyN; }).value;
+                // $('#past30 .number-display').text(past7)
+                //
+                // date.filterRange([moment().add('days', -60).toDate(), moment().add('days', -30).toDate()]);
+                // var past7 = all.reduceSum(function(d) { return d.dailyN; }).value;
+                // $('#previous30 .number-display').text(past7)
+
+        
         growthChart
             .height(280)
             .transitionDuration(1000)
@@ -219,7 +260,7 @@
     d3.csv("summary.csv", function(error, subjects) {
         subjects.forEach(function(d, i) {
             d.index = i;
-            d.date = moment(d.CreatedDate);
+            d.date = moment(d.CreatedDate).toDate();
             d.age = +d.Age__c;
             d.gender = d.Gender__c || "Unknown";
             d.fh = d.Family_Members_has_Alzheimer__c || "Unknown";
@@ -251,7 +292,7 @@
             
         var subject = crossfilter(subjects),
                 all = subject.groupAll(),
-                date = subject.dimension(function(d) { return d.date.toDate(); }),
+                date = subject.dimension(function(d) { return d.date; }),
                 dates = date.group(d3.time.day),
                 // hour = subject.dimension(function(d) { return d.date.getHours() + d.date.getMinutes() / 60; }),
                 // hours = hour.group(Math.floor),
@@ -285,7 +326,7 @@
                 age = subject.dimension(function(d) { return Math.max(-60, Math.min(149, d.age)); }),
                 ages = age.group(function(d) { return Math.floor(d / 10) * 10; });
 
-                var week = subject.dimension(function(d) { return d.date.startOf('week'); });
+                var week = subject.dimension(function(d) { return moment(d.date).startOf('week'); });
                 var registered = week.group().reduce(
                     function(p, v) {
                         p++;
@@ -428,9 +469,25 @@
                      
 
         dataCount.dimension(subject)
-                .group(all);   
+                .group(all);
         
+                date.filterRange([moment().add('days', -7).toDate(), new Date()]);
+                var past7 = all.reduceCount().value;
+                $('#past7 .number-display').text(past7)
+                
+                date.filterRange([moment().add('days', -14).toDate(), moment().add('days', -7).toDate()]);
+                var previous7 = all.reduceCount().value;
+                $('#previous7 .number-display').text(previous7)
+                
+                date.filterRange([moment().add('days', -30).toDate(), new Date()]);
+                var past30 = all.reduceCount().value;
+                $('#past30 .number-display').text(past30)
+                
+                date.filterRange([moment().add('days', -60).toDate(), moment().add('days', -30).toDate()]);
+                var previous30 = all.reduceCount().value;
+                $('#previous30 .number-display').text(previous30)
         
+                date.filterAll();
         genderChart
                 .height(180) // (optional) define chart height, :default = 200
                 .radius(80) // define pie radius
@@ -764,7 +821,7 @@
                     .centerBar(true)
                     // (optional) set gap between bars manually in px, :default=2
                     .gap(1)
-                    //.brushOn(true)
+                    .brushOn(false)
                     .legend(dc.legend().x(40).y(10).gap(20).horizontal(true))
                     // (optional) set filter brush rounding
                     // .round(dc.round.floor)
@@ -841,7 +898,7 @@
                                     return formatNumber(x);
                                 })
                     ])
-                    .x(d3.time.scale().domain([new Date(2013, 11, 1), new Date()]))
+                    .x(d3.time.scale().domain([new Date('2013-12-01'), new Date()]))
                     .xUnits(d3.time.weeks)
                     .elasticY(true)
                     //.y(d3.scale.linear().domain([0,10]).range([0, 0]))
@@ -854,6 +911,73 @@
             //feedbackChart.yAxisLabel('Rating');
                                 
             dc.renderAll();
+            
+            $('#past7').click(function(e){
+                e.preventDefault();
+                dc.filterAll();
+                date.filterRange([moment().add('days', -7).toDate(), new Date()]);
+                //gender.filter('Male');
+                //age.filterRange([18,25]);
+                dc.redrawAll();
+            });
+            $('#previous7').click(function(e){
+                e.preventDefault();
+                dc.filterAll();
+                date.filterRange([moment().add('days', -14).toDate(), moment().add('days', -7).toDate()]);
+                //gender.filter('Male');
+                //age.filterRange([18,25]);
+                dc.redrawAll();
+            });
+            $('#past30').click(function(e){
+                e.preventDefault();
+                dc.filterAll();
+                date.filterRange([moment().add('days', -30).toDate(), new Date()]);
+                //gender.filter('Male');
+                //age.filterRange([18,25]);
+                dc.redrawAll();
+            });
+            $('#previous30').click(function(e){
+                e.preventDefault();
+                dc.filterAll();
+                date.filterRange([moment().add('days', -60).toDate(), moment().add('days', -30).toDate()]);
+                //gender.filter('Male');
+                //age.filterRange([18,25]);
+                dc.redrawAll();
+            });
+            
+            $('#lumosity-1').click(function(e){
+                e.preventDefault();
+                dc.filterAll();
+                date.filterRange([new Date('2014-03-10'), new Date('2014-03-14')]);
+                //gender.filter('Male');
+                //age.filterRange([18,25]);
+                dc.redrawAll();
+            });
+            $('#lumosity-2').click(function(e){
+                e.preventDefault();
+                dc.filterAll();
+                date.filterRange([new Date('2014-03-14'), new Date('2014-03-17')]);
+                //gender.filter('Male');
+                //age.filterRange([18,25]);
+                dc.redrawAll();
+            });
+            $('#launch-week').click(function(e){
+                e.preventDefault();
+                dc.filterAll();
+                date.filterRange([new Date('2014-04-08'), new Date('2014-04-15')]);
+                //gender.filter('Male');
+                //age.filterRange([18,25]);
+                dc.redrawAll();
+            });
+            $('#apr').click(function(e){
+                e.preventDefault();
+                dc.filterAll();
+                date.filterAll();
+                sourceChart.filter("Alzheimer's Prevention Registry")
+                //gender.filter('Male');
+                //age.filterRange([18,25]);
+                dc.redrawAll();
+            });
         });
 
 
