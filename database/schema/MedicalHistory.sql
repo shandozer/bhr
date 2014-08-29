@@ -18,7 +18,9 @@ SELECT
 	, case when [QID1_5] = 2 then 'no' when [QID1_5] = 1 then 'yes' end
 		AS 'Dx_Dementia'
 	, [QID1_6]
-	, [QID1_7]
+	, case when [QID1_7] = 2 then 'no' when [QID1_7]  = 1 then 'yes' end
+		AS 'Dx_HighBloodPressure'
+		
 	, [QID1_8]
 	, case when [QID1_9] = 2 then 'no' when [QID1_9]  = 1 then 'yes' end
 		AS 'Dx_Diabetes'

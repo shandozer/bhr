@@ -19,7 +19,7 @@ INNER JOIN
 	Sleep sleep
 ON
 	sleep.SubjectCode = iq.SubjectCode
-INNER JOIN
+LEFT OUTER JOIN
 	MedicalHistory med
 ON
 	med.SubjectCode = iq.SubjectCode
@@ -47,7 +47,7 @@ INNER JOIN
 	Sleep sleep
 ON
 	sleep.SubjectCode = iq.SubjectCode
-INNER JOIN
+LEFT OUTER JOIN
 	MedicalHistory med
 ON
 	med.SubjectCode = iq.SubjectCode
