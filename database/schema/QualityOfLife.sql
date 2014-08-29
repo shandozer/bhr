@@ -1,11 +1,27 @@
-CREATE VIEW
+--CREATE VIEW
+ALTER VIEW
   QualityOfLife
 AS
 SELECT
   s.SubjectCode
-	, QID80
-	, QID81
+	, case 
+			when QID80 = 1 then 'excellent' 
+			when QID80 = 2 then 'very good' 
+			when QID80 = 3 then 'good' 
+			when QID80 = 4 then 'fair' 
+			when QID80 = 5 then 'poor' end
+		AS 'GeneralHealth' 
+		
+	, case 
+			when QID81 = 1 then 'much better' 
+			when QID81 = 2 then 'somewhat better' 
+			when QID81 = 3 then 'about same' 
+			when QID81 = 4 then 'somewhat worse' 
+			when QID81 = 5 then 'much worse' end
+		AS 'HealthComparedToYearAgo'
+		
 	, QID82_1
+	
 	, QID82_2
 	, QID82_3
 	, QID82_4
@@ -23,8 +39,17 @@ SELECT
 	, QID84_2
 	, QID84_3
 	, QID85
-	, QID86
+	, case 
+			when QID86 = 1 then 'none' 
+			when QID86 = 2 then 'very mild' 
+			when QID86 = 3 then 'mild' 
+			when QID86 = 4 then 'moderate' 
+			when QID86 = 5 then 'severe' 
+			when QID86 = 6 then 'very severe' end
+		AS 'BodilyPainInLastMonth'
+		
 	, QID87
+	
 	, QID140_1
 	, QID140_2
 	, QID140_3
