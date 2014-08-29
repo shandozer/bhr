@@ -1,4 +1,5 @@
-CREATE VIEW
+--CREATE VIEW
+ALTER VIEW
   Mood
 AS
 SELECT
@@ -8,10 +9,12 @@ SELECT
 	, [Score-weightedStdDev] AS Score_SD
 	, QID55
 	, QID56
-	, QID57
+	, case when QID57 = 1 then 'Yes' when QID57 = 2 then 'No' end
+		AS 'DroppedInterests'
 	, QID58
 	, QID59
-	, QID60
+	, case when QID60 = 1 then 'Yes' when QID60 = 2 then 'No' end
+		AS 'InGoodSpirits'
 	, QID61
 	, QID62
 	, QID63
