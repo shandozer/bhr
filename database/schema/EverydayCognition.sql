@@ -1,4 +1,5 @@
-
+Use BHR
+GO
 
 ALTER VIEW
   EverydayCognition
