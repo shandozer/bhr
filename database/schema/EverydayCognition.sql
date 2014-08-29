@@ -1,26 +1,28 @@
-CREATE VIEW
+
+
+ALTER VIEW
   EverydayCognition
 AS
 SELECT
   s.SubjectCode
 	, QID48
-	, QID49_1
-	, QID49_2
-	, QID49_3
-	, QID49_4
-	, QID49_5
-	, QID49_6
-	, QID49_7
-	, QID49_8
-	, QID50_1
-	, QID50_2
-	, QID50_3
-	, QID50_4
-	, QID50_5
-	, QID50_6
-	, QID50_7
-	, QID50_8
-	, QID50_9
+	, QID49_1 AS 'ShoppingList'
+	, QID49_2 AS 'RecentEventsInNews'
+	, QID49_3 AS 'DaysOldConversation'
+	, QID49_4 AS 'WhereObjectsPlaced'
+	, QID49_5 AS 'RepeatingStories'
+	, QID49_6 AS 'DayOfTheWeek'
+	, QID49_7 AS 'AlreadyToldSomeone'
+	, QID49_8 AS 'AppointmentsEngagements'
+	, QID50_1 AS 'NamesOfObjects'
+	, QID50_2 AS 'VerbalInstructionsGiven'
+	, QID50_3 AS 'FindingWordsToUseInConvo'
+	, QID50_4 AS 'CommunicatingThoughtsInConvo'
+	, QID50_5 AS 'FollowingStoriesViewedInMedia'
+	, QID50_6 AS 'UnderstandingSomeonesPointInConvo'
+	, QID50_7 AS 'CommonWordMeanings'
+	, QID50_8 AS 'DescribingTVProgramViewed'
+	, QID50_9 AS 'VerbalInstructionComprehension'
 	, QID51_1
 	, QID51_2
 	, QID51_3
