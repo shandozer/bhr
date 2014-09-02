@@ -6,10 +6,10 @@ SELECT
 	, HasSleepProblems AS 'IQ_SleepProblems'
 	, iq.SleepApnea AS 'IQ_HasApnea'
 	, med.SleepApnea AS 'MedHistory_HasApnea'
-	, case when sleep.OverallSleepQuality = 0 then 'good' when sleep.OverallSleepQuality = 1 then 'fairly good' when sleep.OverallSleepQuality = 2 then 'fairly bad' when sleep.OverallSleepQuality = 3 then 'bad' end
+	, case when sleep.OverallSleepQuality = 0 then 'good' when sleep.OverallSleepQuality = 1 then 'fairly good' when sleep.OverallSleepQuality = 2 then 'fairly bad' when sleep.OverallSleepQuality = 3 then 'bad' else NULL end
 		AS 'SleepHistory_OverallQuality'
 	, iq.TookSleepMedications
-	, case when sleep.FrequencyTakenSleepMeds = 1 then 'None' when sleep.FrequencyTakenSleepMeds = 2 then 'less than once' when sleep.FrequencyTakenSleepMeds = 3 then 'once or twice' when sleep.FrequencyTakenSleepMeds = 4 then '3 or more' end
+	, case when sleep.FrequencyTakenSleepMeds = 1 then 'None' when sleep.FrequencyTakenSleepMeds = 2 then 'less than once' when sleep.FrequencyTakenSleepMeds = 3 then 'once or twice' when sleep.FrequencyTakenSleepMeds = 4 then '3 or more' else NULL end
 		AS 'Sleep_WeeklyMedsTaken'
 	
 FROM 
