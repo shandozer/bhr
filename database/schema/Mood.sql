@@ -9,18 +9,18 @@ SELECT
 	, [Score-weightedStdDev] AS Score_SD
 	, QID55
 	, QID56
-	, case when QID57 = 1 then 'Yes' when QID57 = 2 then 'No' end
-		AS 'DroppedInterests'
+	, QID57 
 	, QID58
 	, QID59
-	, case when QID60 = 1 then 'Yes' when QID60 = 2 then 'No' end
-		AS 'InGoodSpirits'
+	, QID60 
 	, QID61
 	, QID62
-	, QID63
+	,  case when QID63 = 1 then 'Yes' when QID63 = 0 then 'No' else NULL end
+		AS 'DroppedInterests'
 	, QID64
 	, QID65
-	, QID66
+	, case when QID66 = 1 then 'Yes' when QID60 = 0 then 'No' else NULL end
+		AS 'InGoodSpirits'
 	, QID67
 	, QID68
 	, QID69
