@@ -48,3 +48,4 @@ data.db
 screenshots
 *.csv
 .idea
+.env/
