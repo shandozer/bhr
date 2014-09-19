@@ -260,13 +260,13 @@
     d3.csv("summary.csv", function(error, subjects) {
         subjects.forEach(function(d, i) {
             d.index = i;
-            d.date = moment(d.CreatedDate).toDate();
-            d.age = +d.Age__c;
-            d.gender = d.Gender__c || "Unknown";
-            d.fh = d.Family_Members_has_Alzheimer__c || "Unknown";
-            d.eth = d.Race_Ethnicity_Selected__c.indexOf(';') > -1 ? "Mixed": d.Race_Ethnicity_Selected__c || "Unknown";
-            d.mem = d.Memory_problem_concerns__c || "Unknown";
-            d.sleep = d.Has_Sleep_Problems__c || "Unknown";
+            d.date = moment(d.RegistrationDateTime).toDate();
+            d.age = +d.Age;
+            d.gender = d.Gender || "Unknown";
+            d.fh = d.FamilyMemberAlzheimers || "Unknown";
+            d.eth = d.RaceEthnicity.indexOf(';') > -1 ? "Mixed": d.RaceEthnicity || "Unknown";
+            d.mem = d.ConcernedMemoryProblem || "Unknown";
+            d.sleep = d.SleepProblems || "Unknown";
             d.tests = +d.TestsCompleted;
             d.questionnaires = +d.QuestionnairesCompleted;
             d.rate = +d.CompletionRate;
@@ -274,7 +274,7 @@
             d.clear = +d.HowClear;
             d.likely = +d.HowLikely;
             d.testStatus = d.TestStatus;
-            d.source = d.LeadSource || "Unknown";
+            d.source = d.ReferralSource || "Unknown";
         });
 
         var colorizer = function(chart){
@@ -319,7 +319,7 @@
                         return "4-6";
                     if (d.questionnaires >= 7 && d.questionnaires < 10)
                         return "7-9";
-                    if (d.questionnaires == 10)
+                    if (d.questionnaires >= 10)
                         return "All";
                 }),
                 qStatusGroup = qStatus.group(),
@@ -399,7 +399,7 @@
                                         p.fours++;
                                     if (v.questionnaires >= 7 && v.questionnaires < 10)
                                         p.sevens++;
-                                    if (v.questionnaires == 10)
+                                    if (v.questionnaires >= 10)
                                         p.alls++;
                                     
                                     return p;
@@ -414,7 +414,7 @@
                                         p.fours--;
                                     if (v.questionnaires >= 7 && v.questionnaires < 10)
                                         p.sevens--;
-                                    if (v.questionnaires == 10)
+                                    if (v.questionnaires >= 10)
                                         p.alls--;
                                         
                                     return p;
@@ -782,7 +782,7 @@
                     .centerBar(true)
                     // (optional) set gap between bars manually in px, :default=2
                     .gap(1)
-                    //.brushOn(true)
+                    .brushOn(false)
                     .legend(dc.legend().x(40).y(10).horizontal(true))
                     // (optional) set filter brush rounding
                     // .round(dc.round.floor)
