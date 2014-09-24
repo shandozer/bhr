@@ -1,4 +1,7 @@
-CREATE VIEW
+Use BHR; 
+GO
+
+ALTER VIEW
   InitialQuestionnaire
 AS
 SELECT
@@ -23,6 +26,10 @@ SELECT
 	, Smoked_Regularly__c AS SmokedRegularly
 	, Took_Sleep_Medications__c AS TookSleepMedications
 	, Trouble_remembering__c AS TroubleRemembering
+	, Access_of_Medical_Record__c AS MedicalRecordsAccess
+	, Is_interested_in_Participating__c AS InterestedInFutureStudies
+	, Has_Study_Partner__c AS HasStudyBuddy
+	
 FROM
   CodeKey k
 INNER JOIN
@@ -31,3 +38,5 @@ ON
   k.SalesforceID = c.Id
 AND
   IsDeleted = 'false'
+
+GO
