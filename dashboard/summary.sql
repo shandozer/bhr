@@ -1,27 +1,40 @@
+ALTER VIEW
+	Reports.Summary
+AS
+	
+WITH Feedback AS (
+    SELECT
+        s.ID
+        , HowEasy
+        , HowClear
+        , HowLikely
+		, ROW_NUMBER() OVER (PARTITION BY PortalUserId ORDER BY FeedbackDateTime DESC) AS RowNumber
+    FROM
+        PortalUserFeedbacks puf
+    INNER JOIN
+        PortalUsers u
+	ON
+		puf.PortalUserId = u.Id
+	INNER JOIN
+		Subjects s
+	ON
+		u.PatientID = s.PatientID
+)
+
 SELECT
-    Age__c
-    , CreatedDate
-    , Gender__c
-    , Has_Initial_Questionnaire_Completed__c
-    , Race_Ethnicity_Selected__c
-    , Family_Members_has_Alzheimer__c
-    , Memory_problem_concerns__c
-    , Has_Sleep_Problems__c
+    DATEDIFF(yy, p.DateOfBirth, s.RegistrationDateTime) AS Age
+    , s.RegistrationDateTime
+    , CASE p.Gender WHEN 0 THEN 'Male' WHEN 1 THEN 'Female' ELSE NULL END AS Gender
+    , dbo.GetRaceEthnicity(p.ID) AS RaceEthnicity
+    , FamilyMemberAlzheimers
+    , ConcernedMemoryProblem
+    , SleepProblems
     , t.TestsCompleted
     , t.CompletionRate
     , t.QuestionnairesCompleted
     , t.QuestionnairesCompletedPct
     , t.CogStateCompleted
     , t.LumosityCompleted
-    , Change_in_memory_in_past_10_years__c
-    , Use_Recreational_Drugs__c
-    , Health__c
-    , Previous_Year_Health__c
-    , Alcoholic_drinks_frequency__c
-    , Diabetes__c
-    , In_good_spirits__c
-    , Smoke_cigarettes__c
-    , Trouble_remembering__c
     , CASE
             WHEN t.CogStateCompleted > 0 AND t.LumosityCompleted > 0 THEN 'Both'
             WHEN t.CogStateCompleted = 0 AND t.LumosityCompleted > 0 THEN 'Lumosity'
@@ -31,52 +44,83 @@ SELECT
     , f.HowEasy
     , f.HowClear
     , f.HowLikely
-    , c.LeadSource
+    , r.Title AS ReferralSource
 FROM
-    Contact c
+    Subjects s
+INNER JOIN
+	Patients p
+ON
+	s.PatientID = p.ID
+LEFT OUTER JOIN
+	ReferralSources r
+ON
+	s.ReferralSourceID = r.ID
 LEFT OUTER JOIN
 ( 
     SELECT
-      c.Id
-      , SUM(CASE WHEN qr.Status__c = 'Completed' THEN 1 ELSE 0 END) AS TestsCompleted
-      , MAX(CASE WHEN qr.Status__c = 'Completed' AND s.Name = 'Card Cognitive Test' THEN 1 ELSE 0 END) AS CogStateCompleted
-      , MAX(CASE WHEN qr.Status__c = 'Completed' AND s.Name = 'Lumosity Test' THEN 1 ELSE 0 END) AS LumosityCompleted
-      , SUM(CASE WHEN qr.Status__c = 'Completed' AND s.Name NOT IN ('Lumosity Test', 'Card Cognitive Test') THEN 1 ELSE 0 END) AS QuestionnairesCompleted
-      , CAST(CAST(SUM(CASE WHEN qr.Status__c = 'Completed' AND s.Name NOT IN ('Lumosity Test', 'Card Cognitive Test') THEN 1 ELSE 0 END) AS FLOAT)/CAST(10 AS FLOAT) AS DEC(3,2)) AS QuestionnairesCompletedPct
-      , CAST(CAST(SUM(CASE WHEN qr.Status__c = 'Completed' THEN 1 ELSE 0 END) AS FLOAT)/CAST(COUNT(1) AS FLOAT) AS DEC(3,2)) AS CompletionRate
+      s.ID
+      , SUM(CASE WHEN p.Status = 3 THEN 1 ELSE 0 END) AS TestsCompleted
+      , MAX(CASE WHEN p.Status = 3 AND pt.Title = 'Card Cognitive Test' THEN 1 ELSE 0 END) AS CogStateCompleted
+      , MAX(CASE WHEN p.Status = 3 AND pt.Title = 'Brain Performance Test' THEN 1 ELSE 0 END) AS LumosityCompleted
+      , SUM(CASE WHEN p.Status = 3 AND pt.Title NOT IN ('Brain Performance Test', 'Card Cognitive Test') THEN 1 ELSE 0 END) AS QuestionnairesCompleted
+      , CAST(CAST(SUM(CASE WHEN p.Status = 3 AND pt.Title NOT IN ('Brain Performance Test', 'Card Cognitive Test') THEN 1 ELSE 0 END) AS FLOAT)/CAST(10 AS FLOAT) AS DEC(3,2)) AS QuestionnairesCompletedPct
+      , CAST(CAST(SUM(CASE WHEN p.Status = 3 THEN 1 ELSE 0 END) AS FLOAT)/CAST(COUNT(1) AS FLOAT) AS DEC(3,2)) AS CompletionRate
     FROM
-      Questionnaire_Response__c qr
+      Procedures p
     INNER JOIN
-      Subtab__c s
+      ProcedureTypes pt
     ON
-      Subtab__c = s.Id
+      p.TypeID = pt.ID
     INNER JOIN
-      Contact c
+      Subjects s
     ON
-      Contact__c = c.Id
+      p.SubjectID = s.ID
     WHERE
-      (s.Status__c = 'Active' OR s.Name = 'Lumosity Test')
-      AND s.Name NOT IN ('My Profile', 'Feedback')
-      AND c.CreatedDate > s.CreatedDate
+      pt.Title NOT IN ('Initial CogState Test')
     GROUP BY
-      c.Id
+      s.ID
 ) t
 ON
-    c.Id = t.Id
+    s.ID = t.ID
 LEFT OUTER JOIN
 (
-    SELECT
-        s.ExternalDataReference AS Id
-        , QID1_1 AS HowEasy
-        , QID2_1 AS HowClear
-        , QID3 AS HowLikely
-    FROM
-        FeedbackSurvey f
-    INNER JOIN
-        TheBrainInitiative s
-    ON
-        f.ExternalDataReference = s.ExternalDataReference
+	SELECT * FROM Feedback WHERE RowNumber = 1
 ) f
 ON
-    c.Id = f.Id
-;
+    s.ID = f.ID
+LEFT OUTER JOIN
+	(
+		SELECT 
+			p.SubjectID
+			, CASE QID4 WHEN 1 THEN 'Yes' WHEN 2 THEN 'No' ELSE NULL END AS FamilyMemberAlzheimers
+			, CASE QID2 WHEN 1 THEN 'Yes' WHEN 2 THEN 'No' ELSE NULL END  AS ConcernedMemoryProblem
+			, CASE QID10 WHEN 1 THEN 'Yes' WHEN 2 THEN 'No' ELSE NULL END  AS SleepProblems
+		FROM
+			Qualtrics.SV_bNiZN77psPOU4rH q
+		INNER JOIN
+			(
+				QualtricsResponses r
+			INNER JOIN
+				Procedures p
+			ON
+				r.ProcedureID = p.ID
+			)
+		ON
+			q.ResponseID = r.ResponseID
+
+		UNION 
+
+		SELECT
+			sc.SubjectID
+			, Family_Members_has_Alzheimer__c
+			, Memory_problem_concerns__c
+			, Has_Sleep_Problems__c
+		FROM
+			SF.Contact c
+		INNER JOIN
+			SubjectCodes sc
+		ON
+			c.Id = sc.Code
+			) b
+ON
+	s.ID = b.SubjectID
